@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Legend Acers — 2-Member Work Split</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c10;
+    --surface: #0f1520;
+    --surface2: #161f2e;
+    --border: #1e2d42;
+    --accent: #00e5ff;   /* Member A color */
+    --accent2: #ff6b35;  /* Member B color */
+    --accent3: #7fff6e;
+    --accent4: #ffd700;
+    --text: #e8f0fe;
+    --muted: #7a8ba0;
+    --dim: #3a4a5c;
+    --danger: #ff4444;
+    --warn: #ffaa00;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
+    padding-top: 49px;
+  }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(8,12,16,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  nav .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 14px; color: var(--accent); }
+  nav .links { display: flex; gap: 24px; }
+  nav .links a { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); text-decoration: none; letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s; }
+  nav .links a:hover { color: var(--accent); }
+  @media(max-width:600px){ nav .links { display: none; } }
+
+  .hero {
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 60px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(0,229,255,0.05) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    animation: pulse 4s ease-in-out infinite;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(0,229,255,0.012) 40px, rgba(0,229,255,0.012) 41px);
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:translate(-50%,-50%) scale(1)} 50%{opacity:0.6;transform:translate(-50%,-50%) scale(1.1)} }
+
+  .team-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid rgba(0,229,255,0.3);
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 32px;
+    position: relative; z-index: 1;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(40px, 7vw, 80px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    position: relative; z-index: 1;
+    margin-bottom: 12px;
+  }
+  .hero-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    position: relative; z-index: 1;
+    letter-spacing: 0.05em;
+    margin-bottom: 40px;
+  }
+
+  /* SPLIT BAR */
+  .split-bar {
+    display: flex;
+    gap: 16px;
+    position: relative; z-index: 1;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .split-pill {
+    display: flex; align-items: center; gap: 10px;
+    border-radius: 100px;
+    padding: 10px 22px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .split-pill.a { background: rgba(0,229,255,0.12); border: 1px solid rgba(0,229,255,0.4); color: var(--accent); }
+  .split-pill.b { background: rgba(255,107,53,0.12); border: 1px solid rgba(255,107,53,0.4); color: var(--accent2); }
+  .split-pill .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .split-pill.a .dot { background: var(--accent); }
+  .split-pill.b .dot { background: var(--accent2); }
+
+  .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+
+  section { padding: 72px 0; border-top: 1px solid var(--border); }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+  }
+  .section-intro { color: var(--muted); font-size: 15px; max-width: 680px; margin-bottom: 48px; line-height: 1.75; }
+
+  /* MEMBER CARDS */
+  .member-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+  @media(max-width:700px){ .member-grid { grid-template-columns: 1fr; } }
+
+  .member-card {
+    border-radius: 16px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .member-card.a {
+    background: linear-gradient(135deg, rgba(0,229,255,0.07) 0%, rgba(0,229,255,0.02) 100%);
+    border: 1px solid rgba(0,229,255,0.25);
+  }
+  .member-card.b {
+    background: linear-gradient(135deg, rgba(255,107,53,0.07) 0%, rgba(255,107,53,0.02) 100%);
+    border: 1px solid rgba(255,107,53,0.25);
+  }
+  .member-card::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    opacity: 0.06;
+  }
+  .member-card.a::before { background: var(--accent); }
+  .member-card.b::before { background: var(--accent2); }
+
+  .member-avatar {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+  .member-card.a .member-avatar { background: rgba(0,229,255,0.15); color: var(--accent); }
+  .member-card.b .member-avatar { background: rgba(255,107,53,0.15); color: var(--accent2); }
+
+  .member-name { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+  .member-role { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--muted); margin-bottom: 16px; }
+  .member-card.a .member-role { color: var(--accent); opacity: 0.8; }
+  .member-card.b .member-role { color: var(--accent2); opacity: 0.8; }
+
+  .tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.05em;
+  }
+  .tag.a { background: rgba(0,229,255,0.1); color: var(--accent); border: 1px solid rgba(0,229,255,0.2); }
+  .tag.b { background: rgba(255,107,53,0.1); color: var(--accent2); border: 1px solid rgba(255,107,53,0.2); }
+
+  /* STAGE TABLE */
+  .stage-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .stage-row {
+    display: grid;
+    grid-template-columns: 52px 1fr 1fr 100px;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  @media(max-width:700px){
+    .stage-row { grid-template-columns: 1fr; }
+    .stage-row > * { border-right: none !important; border-bottom: 1px solid var(--border); }
+    .stage-row > *:last-child { border-bottom: none; }
+  }
+
+  .stage-num {
+    background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--muted);
+    border-right: 1px solid var(--border);
+  }
+  .stage-info {
+    background: var(--surface);
+    padding: 18px 20px;
+    border-right: 1px solid var(--border);
+  }
+  .stage-info h4 { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .stage-info p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+  .stage-owner-cell {
+    background: var(--surface);
+    padding: 18px 20px;
+    border-right: 1px solid var(--border);
+  }
+  .stage-owner-cell p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+  .stage-badge {
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .stage-badge.a { background: rgba(0,229,255,0.08); color: var(--accent); }
+  .stage-badge.b { background: rgba(255,107,53,0.08); color: var(--accent2); }
+  .stage-badge.ab { background: rgba(127,255,110,0.07); color: var(--accent3); font-size: 11px; }
+
+  /* DETAILED BREAKDOWN */
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media(max-width:700px){ .detail-grid { grid-template-columns: 1fr; } }
+
+  .detail-card {
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .detail-card.a { background: rgba(0,229,255,0.05); border: 1px solid rgba(0,229,255,0.2); }
+  .detail-card.b { background: rgba(255,107,53,0.05); border: 1px solid rgba(255,107,53,0.2); }
+
+  .detail-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .detail-card.a h3 { color: var(--accent); }
+  .detail-card.b h3 { color: var(--accent2); }
+
+  .task-item {
+    display: flex; gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .task-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .task-icon { flex-shrink: 0; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--dim); margin-top: 3px; min-width: 28px; }
+  .task-text { color: var(--muted); }
+  .task-text strong { color: var(--text); }
+
+  /* TIMELINE */
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .tl-item { display: flex; gap: 16px; position: relative; padding-bottom: 24px; }
+  .tl-item:last-child { padding-bottom: 0; }
+
+  .tl-left {
+    display: flex; flex-direction: column; align-items: center;
+    width: 20px; flex-shrink: 0;
+  }
+  .tl-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .tl-line { width: 1px; flex: 1; background: var(--border); margin-top: 4px; }
+  .tl-item:last-child .tl-line { display: none; }
+
+  .tl-body { flex: 1; }
+  .tl-week { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+  .tl-body h4 { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .tl-tasks { display: flex; flex-direction: column; gap: 4px; }
+  .tl-task { font-size: 12px; color: var(--muted); display: flex; gap: 8px; }
+  .tl-task .who {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 1px 8px;
+    border-radius: 100px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .tl-task .who.a { background: rgba(0,229,255,0.12); color: var(--accent); }
+  .tl-task .who.b { background: rgba(255,107,53,0.12); color: var(--accent2); }
+
+  /* FILE OWNERSHIP */
+  .file-tree {
+    background: #060a0e;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 2;
+    color: #8899aa;
+    overflow-x: auto;
+  }
+  .file-tree .dir { color: var(--muted); }
+  .file-tree .fa { color: var(--accent); }
+  .file-tree .fb { color: var(--accent2); }
+  .file-tree .shared { color: var(--accent3); }
+  .file-tree .cm { color: #3a4e60; font-style: italic; }
+
+  /* GROUND RULES */
+  .rules-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  @media(max-width:700px){ .rules-grid { grid-template-columns: 1fr; } }
+  .rule-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .rule-card .num {
+    font-family: 'Syne', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--dim);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .rule-card h4 { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .rule-card p { font-size: 12px; color: var(--muted); line-height: 1.65; }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 36px 0;
+    text-align: center;
+  }
+  footer p { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--dim); letter-spacing: 0.08em; }
+
+  strong { color: var(--text); }
+  .hl-a { color: var(--accent); font-weight: 600; }
+  .hl-b { color: var(--accent2); font-weight: 600; }
+  .hl-g { color: var(--accent3); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">LEGEND ACERS</div>
+  <div class="links">
+    <a href="#overview">Overview</a>
+    <a href="#stages">Stages</a>
+    <a href="#breakdown">Breakdown</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#files">Files</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="team-tag">⚡ Legend Acers · India Runs 2026 · 2-Member Split</div>
+  <h1>Who Builds<br><span style="color:var(--accent)">What</span></h1>
+  <p class="hero-sub">6 stages · 2 members · zero overlap · one submission</p>
+  <div class="split-bar">
+    <div class="split-pill a">
+      <div class="dot"></div>
+      Member A — AI + Intelligence
+    </div>
+    <div class="split-pill b">
+      <div class="dot"></div>
+      Member B — Systems + Demo
+    </div>
+  </div>
+</div>
+
+<!-- OVERVIEW -->
+<section id="overview">
+  <div class="container">
+    <div class="section-label">Split Logic</div>
+    <h2>How the work<br>was divided</h2>
+    <p class="section-intro">The original plan had 4 members. With 2, each person absorbs two complementary roles. The split follows a natural seam: <span class="hl-a">Member A</span> owns everything that requires AI intuition, semantic understanding, and evaluation judgment. <span class="hl-b">Member B</span> owns everything that requires systems engineering, performance, and user-facing deliverables.</p>
+
+    <div class="member-grid">
+      <div class="member-card a">
+        <div class="member-avatar">A</div>
+        <div class="member-name">Member A</div>
+        <div class="member-role">AI Lead · Evaluation Lead</div>
+        <p style="color:var(--muted);font-size:13px;line-height:1.7;margin-bottom:14px;">
+          Owns the intelligence layer of the pipeline. Responsible for making the system <em>understand</em> the JD — not just match keywords. Owns all semantic scoring, ground-truth evaluation, reasoning generation, and LLM re-ranking. Also owns the honeypot detection logic design (the rules, not the code).
+        </p>
+        <div class="tag-list">
+          <span class="tag a">jd_parser.py</span>
+          <span class="tag a">scorer.py (semantic)</span>
+          <span class="tag a">reasoning_gen.py</span>
+          <span class="tag a">honeypot logic</span>
+          <span class="tag a">eval / ground truth</span>
+          <span class="tag a">LLM re-ranking</span>
+        </div>
+      </div>
+
+      <div class="member-card b">
+        <div class="member-avatar">B</div>
+        <div class="member-name">Member B</div>
+        <div class="member-role">Systems Lead · Demo Lead</div>
+        <p style="color:var(--muted);font-size:13px;line-height:1.7;margin-bottom:14px;">
+          Owns the engineering backbone. Responsible for making the system <em>fast, correct, and deliverable</em>. Builds the feature engineering pipeline, behavioral multiplier, pre-computation script, submission validator, and the Streamlit demo. Code quality and runtime performance are critical path items.
+        </p>
+        <div class="tag-list">
+          <span class="tag b">feature_engineer.py</span>
+          <span class="tag b">behavioral.py</span>
+          <span class="tag b">honeypot.py (code)</span>
+          <span class="tag b">precompute.py</span>
+          <span class="tag b">rank.py</span>
+          <span class="tag b">sandbox/app.py</span>
+          <span class="tag b">README + docs</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STAGES -->
+<section id="stages">
+  <div class="container">
+    <div class="section-label">Pipeline Ownership</div>
+    <h2>Stage-by-stage<br>ownership</h2>
+    <p class="section-intro">Each stage has a clear owner. The "Responsibilities" column shows what that person builds and ships, not just reviews.</p>
+
+    <div class="stage-list">
+
+      <div class="stage-row">
+        <div class="stage-num">S1</div>
+        <div class="stage-info">
+          <h4>JD Understanding & Decomposition</h4>
+          <p>Parse the JD into hard requirements, soft preferences, explicit disqualifiers, and company-fit signals. Output: <code>artifacts/jd_features.json</code>. Everything else is blocked until this exists.</p>
+        </div>
+        <div class="stage-owner-cell">
+          <p><strong style="color:var(--accent)">Member A</strong> — Write <code>jd_parser.py</code>. Extract HARD/SOFT/VETO tiers using rule-based NLP + regex. Build the semantic expansion ontology (e.g. "recommendation system" → retrieval). Test by printing the parsed JSON and verifying it makes intuitive sense.</p>
+        </div>
+        <div class="stage-badge a">A</div>
+      </div>
+
+      <div class="stage-row">
+        <div class="stage-num">S2</div>
+        <div class="stage-info">
+          <h4>Honeypot & Trap Detection</h4>
+          <p>Catch impossible profiles before scoring. All 7 trap types: experience > company age, expert skill with 0 months, 10+ expert skills, title-career mismatch, overlapping job timelines, skills not in career, keyword stuffer flag.</p>
+        </div>
+        <div class="stage-owner-cell">
+          <p><strong style="color:var(--accent2)">Member B</strong> writes <code>honeypot.py</code> (the code). <strong style="color:var(--accent)">Member A</strong> defines the detection rules and edge cases — then hands them to B as a written spec. B implements exactly what A specifies. Test on <code>sample_candidates.json</code>: verify zero false positives on clean candidates.</p>
+        </div>
+        <div class="stage-badge ab">A+B</div>
+      </div>
+
+      <div class="stage-row">
+        <div class="stage-num">S3</div>
+        <div class="stage-info">
+          <h4>Multi-Signal Feature Engineering</h4>
+          <p>Extract 500+ features per candidate across 6 families: skill match, career history, education, disqualifier checks, location/logistics fit. Output: <code>artifacts/feature_matrix.npz</code>.</p>
+        </div>
+        <div class="stage-owner-cell">
+          <p><strong style="color:var(--accent2)">Member B</strong> owns <code>feature_engineer.py</code> entirely. Start with <code>career_quality_score()</code> on 5 sample candidates. Then add skill extraction, education tier weighting, and logistics scoring. Use chunked loading — never load all 100K into RAM at once.</p>
+        </div>
+        <div class="stage-badge b">B</div>
+      </div>
+
+      <div class="stage-row">
+        <div class="stage-num">S4</div>
+        <div class="stage-info">
+          <h4>Hybrid Scoring Engine</h4>
+          <p>Combine Semantic Skill Match (35%) + Career Quality (40%) + Logistics (10%) + Behavioral (15%). Apply VETO checks first — returns 0.0 immediately for disqualified profiles.</p>
+        </div>
+        <div class="stage-owner-cell">
+          <p><strong style="color:var(--accent)">Member A</strong> owns the semantic scoring logic (MiniLM cosine similarity, proficiency × endorsement weighting) and the final scoring formula in <code>scorer.py</code>. <strong style="color:var(--accent2)">Member B</strong> wires scorer.py end-to-end, integrates VETO checks, and runs it on the sample set first.</p>
+        </div>
+        <div class="stage-badge ab">A+B</div>
+      </div>
+
+      <div class="stage-row">
+        <div class="stage-num">S5</div>
+        <div class="stage-info">
+          <h4>Behavioral Signal Multiplier</h4>
+          <p>Apply 23-signal availability formula as a multiplier (0.3–1.0) on raw scores. Penalizes inactive, unresponsive, or unavailable candidates — treats availability as a gate, not a bonus.</p>
+        </div>
+        <div class="stage-owner-cell">
+          <p><strong style="color:var(--accent2)">Member B</strong> owns <code>behavioral.py</code> entirely. Implement the recency decay formula (<code>e^(–days/90)</code>), recruiter response rate bonus, interview completion rate, and all 23 signal checks. Clamp output to [0.3, 1.0].</p>
+        </div>
+        <div class="stage-badge b">B</div>
+      </div>
+
+      <div class="stage-row">
+        <div class="stage-num">S6</div>
+        <div class="stage-info">
+          <h4>Reasoning Generation + LLM Re-Rank</h4>
+          <p>Generate specific, honest, non-templated reasoning per candidate for the CSV column. Optionally re-rank top 200 using Phi-3-mini GGUF. This is Stage 4 of judging — the reasoning column is manually reviewed.</p>
+        </div>
+        <div class="stage-owner-cell">
+          <p><strong style="color:var(--accent)">Member A</strong> owns <code>reasoning_gen.py</code> entirely. Build the template system that inserts real candidate facts (title, YoE, top skills, location, notice period, response rate, career highlights, honest concerns). Attempt Phi-3-mini GGUF for top-200 if compute allows; template fallback is fine.</p>
+        </div>
+        <div class="stage-badge a">A</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- DETAILED BREAKDOWN -->
+<section id="breakdown">
+  <div class="container">
+    <div class="section-label">Full Task List</div>
+    <h2>Everything each<br>person owns</h2>
+    <p class="section-intro">No ambiguity. If your name is on it, you build it, test it, and unblock the other person when they need your output.</p>
+
+    <div class="detail-grid">
+
+      <!-- MEMBER A -->
+      <div class="detail-card a">
+        <h3>
+          <span style="width:36px;height:36px;border-radius:50%;background:rgba(0,229,255,0.15);display:inline-flex;align-items:center;justify-content:center;font-family:Syne,sans-serif;font-weight:800;font-size:16px;">A</span>
+          Member A — AI + Eval
+        </h3>
+
+        <div class="task-item">
+          <span class="task-icon">S1</span>
+          <span class="task-text"><strong>jd_parser.py</strong> — Parse the JD into structured requirement tiers. Output <code>jd_features.json</code>. This is Day 1, Task 1 — everyone is blocked until this exists.</span>
+        </div>
+        <div class="task-item">
+          <span class="task-icon">S2</span>
+          <span class="task-text"><strong>Honeypot rules spec</strong> — Write a precise written specification of all 7 trap types with exact detection conditions. Hand it to Member B to implement.</span>
+        </div>
+        <div class="task-item">
+          <span class="task-icon">S4</span>
+          <span class="task-text"><strong>Semantic skill matching</strong> — MiniLM-L6-v2 setup, cosine similarity calculation, proficiency × endorsement × duration weighting. Deliver as a function <code>semantic_skill_match(candidate, jd_features)</code>.</span>
+        </div>
+        <div class="task-item">
+          <span class="task-icon">S4</span>
+          <span class="task-text"><strong>Scoring weights formula</strong> — Define and document the 40/35/15/10 weighting rationale. Tune these weights after seeing eval results.</span>
+        </div>
+        <div class="task-item">
+          <span class="task-icon">S6</span>
+          <span class="task-text"><strong>reasoning_gen.py</strong> — Template-based reasoning that inserts real candidate facts. Candidate-specific strings, not copy-paste. Honest concerns surfaced explicitly.</span>
+        </div>
+        <div class="task-item">
+          <span class="task-icon">S6</span>
+          <span class="task-text"><strong>LLM re-ranking (optional)</strong> — Phi-3-mini GGUF prompt engineering for top-200 re-ranking. Fallback to template if too slow.</span>
+        </div>
+        <div class="task-item">
+          <span class="task-icon">EVAL</span>
+          <span class="task-text"><strong>20-candidate ground truth set</strong> — Manually build: 5 perfect fits, 5 strong, 5 borderline, 5 clear rejects. Score the system against them. Track NDCG@10. Tune weights based on results.</span>
+        </div>
+        <div class="task-item">
+          <span class="task-icon">EVAL</span>
+          <span class="task-text"><strong>Manual top-10 review</strong> — After each major change, manually review the top-10 ranked candidates. Are they actually AI engineers at product companies? If not, find the bug.</span>
+        </div>
+        <div class="task-item">
+          <span class="task-icon">META</span>
+          <span class="task-text"><strong>Portal methodology summary</strong> — Write the ≤200 word methodology summary for the submission portal.</span>
+        </div>
+      </div>
+
+      <!-- MEMBER B -->
+      <div class="detail-card b">
+        <h3>
+          <span style="width:36px;height:36px;border-radius:50%;background:rgba(255,107,53,0.15);display:inline-flex;align-items:center;justify-content:center;font-family:Syne,sans-serif;font-weight:800;font-size:16px;">B</span>
+          Member B — Systems + Demo
+        </h3>
+
+        <div class="task-item">
+          <span class="task-icon">REPO</span>
+          <span class="task-text"><strong>Repo setup + data loader</strong> — Day 1: set up all file skeletons, write chunked memory-safe loader for <code>candidates.jsonl.gz</code>. Everyone else is blocked until this works.</span>
+        </div>
+        <div class="task-item">
+          <span class="task-icon">S2</span>
+          <span class="task-text"><strong>honeypot.py</strong> — Implement Member A's detection rule spec exactly. Test on <code>sample_candidates.json</code>. Verify no false positives on genuine candidates.</span>
+        </div>
+        <div class="task-item">
+          <span class="task-icon">S3</span>
+          <span class="task-text"><strong>feature_engineer.py</strong> — Full 500+ feature extraction pipeline. Start with <code>career_quality_score()</code> first (it's the 40% weight). Then add education tier, skill extraction, logistics scoring.</span>
+        </div>
+        <div class="task-item">
+          <span class="task-icon">S4</span>
+          <span class="task-text"><strong>scorer.py wiring</strong> — Integrate all components end-to-end. Apply VETO checks first. Use Member A's scoring formula. Run on sample 50 first, then full 100K.</span>
+        </div>
+        <div class="task-item">
+          <span class="task-icon">S5</span>
+          <span class="task-text"><strong>behavioral.py</strong> — Full 23-signal behavioral multiplier. Recency decay, recruiter response rate, interview completion rate, activity signals. Clamp to [0.3, 1.0].</span>
+        </div>
+        <div class="task-item">
+          <span class="task-icon">S3</span>
+          <span class="task-text"><strong>precompute.py</strong> — Offline pre-computation script. Generates <code>feature_matrix.npz</code> and <code>skill_embeddings.npy</code>. Can take >5 min — that's allowed. Run once, commit artifacts.</span>
+        </div>
+        <div class="task-item">
+          <span class="task-icon">PERF</span>
+          <span class="task-text"><strong>rank.py + performance</strong> — Main ranking script must run in ≤5 min CPU. Use numpy vectorization. Sparse matrices. Profile and optimize. The judge will literally time it.</span>
+        </div>
+        <div class="task-item">
+          <span class="task-icon">VAL</span>
+          <span class="task-text"><strong>validate_submission.py</strong> — Run the provided validator. Fix all format issues: exactly 100 rows, ranks 1–100 each once, score monotonically non-increasing, valid candidate IDs.</span>
+        </div>
+        <div class="task-item">
+          <span class="task-icon">DEMO</span>
+          <span class="task-text"><strong>Streamlit sandbox app</strong> — Accepts ≤100 candidate JSON input, runs ranker, outputs ranked CSV. Include the bias comparison panel: Traditional ATS vs Your System. Deploy to Streamlit Cloud.</span>
+        </div>
+        <div class="task-item">
+          <span class="task-icon">DEMO</span>
+          <span class="task-text"><strong>README + docs</strong> — Clear setup instructions, reproduce command, requirements.txt pinned. The judge reads this first.</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section id="timeline">
+  <div class="container">
+    <div class="section-label">26-Day Build Roadmap</div>
+    <h2>Week by week —<br>who does what</h2>
+    <p class="section-intro">Submission closes June 28. Today is June 3. Parallel tracks from day one — no waiting around.</p>
+
+    <div class="timeline">
+
+      <div class="tl-item">
+        <div class="tl-left">
+          <div class="tl-dot" style="background:var(--accent3)"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-body">
+          <div class="tl-week">Week 1 — June 3–9 · Foundation</div>
+          <h4>Get the pipeline skeleton running on 50 candidates</h4>
+          <div class="tl-tasks">
+            <div class="tl-task"><span class="who b">B</span><span>Set up repo, file skeletons, chunked data loader for candidates.jsonl.gz</span></div>
+            <div class="tl-task"><span class="who a">A</span><span>Write jd_parser.py — extract HARD/SOFT/VETO requirements, output jd_features.json, test it prints sensibly</span></div>
+            <div class="tl-task"><span class="who a">A</span><span>Write honeypot detection rule spec — hand to B as written document</span></div>
+            <div class="tl-task"><span class="who b">B</span><span>Write feature_engineer.py skeleton — career_quality_score() function first, test on 5 candidates</span></div>
+            <div class="tl-task"><span class="who b">B</span><span>Set up Streamlit app shell, design the bias comparison panel wireframe</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left">
+          <div class="tl-dot" style="background:var(--accent)"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-body">
+          <div class="tl-week">Week 2 — June 10–16 · Core Pipeline</div>
+          <h4>End-to-end ranking on the 50-candidate sample set</h4>
+          <div class="tl-tasks">
+            <div class="tl-task"><span class="who b">B</span><span>honeypot.py complete — all 7 trap types, zero false positives on sample set</span></div>
+            <div class="tl-task"><span class="who b">B</span><span>Install sentence-transformers, wire MiniLM into scorer.py using A's semantic_skill_match function</span></div>
+            <div class="tl-task"><span class="who b">B</span><span>behavioral.py complete — full 23-signal formula</span></div>
+            <div class="tl-task"><span class="who b">B</span><span>Run scorer.py end-to-end on sample_candidates.json. Print ranked output.</span></div>
+            <div class="tl-task"><span class="who a">A</span><span>Review top-10 from sample run. Are they actually AI engineers at product companies? Debug until yes.</span></div>
+            <div class="tl-task"><span class="who a">A</span><span>Install MiniLM, build semantic_skill_match(), deliver as a tested function</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left">
+          <div class="tl-dot" style="background:var(--accent2)"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-body">
+          <div class="tl-week">Week 3 — June 17–23 · Scale + Tune</div>
+          <h4>Run on full 100K, tune weights, build ground truth eval</h4>
+          <div class="tl-tasks">
+            <div class="tl-task"><span class="who b">B</span><span>Run precompute.py on full 100K dataset. Generate feature_matrix.npz. Profile runtime.</span></div>
+            <div class="tl-task"><span class="who b">B</span><span>Run rank.py on full dataset. Time it. Optimize if >5min — numpy vectorization, sparse matrices.</span></div>
+            <div class="tl-task"><span class="who a">A</span><span>Build 20-candidate ground truth eval set. Score system against it. Track NDCG@10.</span></div>
+            <div class="tl-task"><span class="who a">A</span><span>Tune the 40/35/15/10 weights based on eval results. Small changes → big NDCG impact.</span></div>
+            <div class="tl-task"><span class="who b">B</span><span>Streamlit app functional — accepts JSON input, returns ranked CSV, shows bias comparison panel</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left">
+          <div class="tl-dot" style="background:var(--accent4)"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-body">
+          <div class="tl-week">Week 4 — June 24–28 · Polish + Submit</div>
+          <h4>Reasoning column, final validation, submit</h4>
+          <div class="tl-tasks">
+            <div class="tl-task"><span class="who a">A</span><span>Build reasoning_gen.py — template-based, candidate-specific, real facts. No copy-paste strings.</span></div>
+            <div class="tl-task"><span class="who a">A</span><span>(Optional) Try Phi-3-mini GGUF for top-200 reasoning. Template fallback is fine if slow.</span></div>
+            <div class="tl-task"><span class="who b">B</span><span>Run validate_submission.py. Fix any format issues. Ranks 1–100 exactly once, score monotonic.</span></div>
+            <div class="tl-task"><span class="who b">B</span><span>Finalize demo flow + README. Deploy Streamlit app to Streamlit Cloud.</span></div>
+            <div class="tl-task"><span class="who a">A</span><span>Write ≤200 word portal methodology summary.</span></div>
+            <div class="tl-task"><span class="who b">B</span><span>Final pipeline run → fresh submission.csv. Both members spot-check top-10 manually.</span></div>
+            <div class="tl-task"><span class="who b">B</span><span>Fill portal metadata: team name, email, GitHub URL, sandbox URL, declare Claude as AI tool.</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FILE OWNERSHIP -->
+<section id="files">
+  <div class="container">
+    <div class="section-label">File Ownership Map</div>
+    <h2>Who owns<br>which file</h2>
+    <p class="section-intro">Color = owner. If your name isn't on it, don't edit it without asking.</p>
+
+    <div class="file-tree">
+<span class="dir">redrob-ranking/</span>
+<span class="shared">├── README.md</span>                        <span class="cm"># B writes this</span>
+<span class="dir">├── requirements.txt</span>                  <span class="cm"># B maintains this</span>
+<span class="dir">├── submission_metadata.yaml</span>           <span class="cm"># B fills this</span>
+<span class="dir">│</span>
+<span class="dir">├── data/</span>
+<span class="dir">│   ├── candidates.jsonl.gz</span>            <span class="cm"># source data — read-only</span>
+<span class="dir">│   └── sample_candidates.json</span>         <span class="cm"># source data — read-only</span>
+<span class="dir">│</span>
+<span class="dir">├── artifacts/</span>                         <span class="cm"># pre-computed, committed</span>
+<span class="fa">│   ├── jd_features.json</span>               <span class="cm"># A generates (output of jd_parser.py)</span>
+<span class="fb">│   ├── skill_embeddings.npy</span>           <span class="cm"># B generates (output of precompute.py)</span>
+<span class="fb">│   └── feature_matrix.npz</span>             <span class="cm"># B generates (output of precompute.py)</span>
+<span class="dir">│</span>
+<span class="dir">├── src/</span>
+<span class="fa">│   ├── jd_parser.py</span>                   <span class="cm"># A — Stage 1</span>
+<span class="fb">│   ├── honeypot.py</span>                    <span class="cm"># B (code) per A's rule spec — Stage 2</span>
+<span class="fb">│   ├── feature_engineer.py</span>            <span class="cm"># B — Stage 3</span>
+<span class="shared">│   ├── scorer.py</span>                      <span class="cm"># A (semantic fn) + B (wiring) — Stage 4</span>
+<span class="fb">│   ├── behavioral.py</span>                  <span class="cm"># B — Stage 5</span>
+<span class="fa">│   └── reasoning_gen.py</span>               <span class="cm"># A — Stage 6</span>
+<span class="dir">│</span>
+<span class="fb">├── precompute.py</span>                      <span class="cm"># B — runs once, generates artifacts/</span>
+<span class="fb">├── rank.py</span>                            <span class="cm"># B — main ranking script (≤5 min)</span>
+<span class="dir">├── validate_submission.py</span>             <span class="cm"># provided by org — do not edit</span>
+<span class="dir">│</span>
+<span class="dir">├── eval/</span>
+<span class="fa">│   └── ground_truth.json</span>              <span class="cm"># A — 20 manual candidate rankings</span>
+<span class="dir">│</span>
+<span class="fb">└── sandbox/</span>                           <span class="cm"># B's domain</span>
+<span class="fb">    ├── app.py</span>                         <span class="cm"># B — Streamlit demo</span>
+<span class="fb">    └── requirements.txt</span>               <span class="cm"># B</span>
+    </div>
+    <div style="display:flex;gap:20px;margin-top:16px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;">
+        <span style="width:12px;height:12px;border-radius:3px;background:var(--accent);display:inline-block;"></span>
+        <span style="color:var(--accent)">Member A owns</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;">
+        <span style="width:12px;height:12px;border-radius:3px;background:var(--accent2);display:inline-block;"></span>
+        <span style="color:var(--accent2)">Member B owns</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;">
+        <span style="width:12px;height:12px;border-radius:3px;background:var(--accent3);display:inline-block;"></span>
+        <span style="color:var(--accent3)">Shared / collaborative</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GROUND RULES -->
+<section>
+  <div class="container">
+    <div class="section-label">Coordination Rules</div>
+    <h2>How to not<br>block each other</h2>
+    <p class="section-intro">Two people means two critical dependencies. Manage them deliberately.</p>
+
+    <div class="rules-grid">
+      <div class="rule-card">
+        <div class="num">01</div>
+        <h4>A unblocks B on Day 1</h4>
+        <p>Member B cannot start scorer.py or feature_engineer.py until <code>jd_features.json</code> exists. Member A's <strong>first task</strong> is to ship jd_parser.py and commit the artifact. No waiting — Day 1.</p>
+      </div>
+      <div class="rule-card">
+        <div class="num">02</div>
+        <h4>B unblocks A on Day 2</h4>
+        <p>Member A can't test semantic scoring end-to-end until B has the data loader and file skeletons up. B sets up the repo <strong>before anything else</strong>. A can then run their code against real data.</p>
+      </div>
+      <div class="rule-card">
+        <div class="num">03</div>
+        <h4>A writes rules, B writes code</h4>
+        <p>For honeypot.py: A writes a precise written spec of all 7 detection conditions. B implements exactly that spec. Don't code from memory — hand the spec document over first.</p>
+      </div>
+      <div class="rule-card">
+        <div class="num">04</div>
+        <h4>Sample set first, always</h4>
+        <p>Never run on full 100K until it works on the 50-candidate sample. The sample is fast — use it for all iteration. Full run only once you're confident in the logic.</p>
+      </div>
+      <div class="rule-card">
+        <div class="num">05</div>
+        <h4>A reviews every top-10</h4>
+        <p>After every scoring change, Member A manually reviews the top-10 ranked candidates. They have the AI intuition to catch subtle bugs. B runs the code; A validates the output makes human sense.</p>
+      </div>
+      <div class="rule-card">
+        <div class="num">06</div>
+        <h4>B owns the submission</h4>
+        <p>Member B runs <code>validate_submission.py</code> and is responsible for the final <code>submission.csv</code> being format-correct. A signs off on the reasoning quality. B signs off on the file format.</p>
+      </div>
+    </div>
+
+    <div style="background:rgba(127,255,110,0.06);border:1px solid rgba(127,255,110,0.2);border-radius:12px;padding:24px 28px;margin-top:32px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent3);margin-bottom:8px;">The Winning Edge</div>
+      <p style="color:#7aa877;font-size:14px;line-height:1.75;">The architecture gets you into the top 20. The <strong style="color:var(--accent3)">ground truth eval set</strong> (Member A's job) is what gets you to #1. Most teams skip this step. Build 20 manually-labeled candidates, score your system against them, and tune the weights until NDCG@10 is maximized. This is also what lets you defend your weight choices in the Stage 5 judge interview with specific data, not intuition.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>Legend Acers · India Runs 2026 · Work Split by Claude, Anthropic</p>
+    <p style="margin-top:6px;">hack2skill.com/event/india_runs/</p>
+  </div>
+</footer>
+
+</body>
+</html>

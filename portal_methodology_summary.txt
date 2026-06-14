@@ -1,0 +1,10 @@
+Our system implements a hybrid, rule-aware ranking architecture specifically designed to capture nuance beyond keyword matching. 
+
+We process candidates through a rigorous multi-stage pipeline:
+1. Hard/Soft Veto Filtering: We parse the JD to extract firm boundaries (e.g., pure academic researchers, LangChain-only experience) and immediately eliminate non-viable candidates.
+2. Honeypot Detection: We utilize 7 explicit trap detection logic rules (e.g., Timeline Overlap, Fake Experts) to zero-score hallucinated or impossible profiles.
+3. Semantic Skill Matching (35%): We employ a pre-computed MiniLM-L6-v2 embedding model to measure semantic similarity between JD requirements and candidate skills, weighted heavily by their proficiency level and actual duration of usage.
+4. Career Quality & Logistics (50%): We balance raw skill scores with real-world career trajectory mapping (titles, companies) and geographical feasibility.
+5. Behavioral Multiplier (15%): The raw score is finally scaled [0.3-1.0] by a multi-signal availability index derived from the candidate's last active date, recruiter response rate, and profile completeness.
+
+This approach guarantees that our top 100 shortlist is not just technically aligned but actually hireable, engaged, and structurally sound.

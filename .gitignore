@@ -1,0 +1,19 @@
+# Ignore dataset files and folders
+dataset/
+*.jsonl
+*.jsonl.gz
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+
+# Ignore heavy precomputed artifacts (keep jd_features.json)
+artifacts/*.npz
+
+# Ignore environments
+.env
+venv/
+env/
+
+# Ignore system files
+.DS_Store
