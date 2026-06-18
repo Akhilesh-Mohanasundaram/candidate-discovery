@@ -240,13 +240,12 @@ We used **Claude** (Anthropic) as a development assistant for code iteration, ar
 
 ## 👥 Team
 
-**Legend Acers** — India.Runs 2026
+**Legend Acers** — India.Runs 2026  
 
-| Role | Responsibilities |
-|------|-----------------|
-| **Member A** — AI & Evaluation Lead | JD parsing, semantic scoring logic, honeypot rule spec, reasoning generation, ground truth evaluation, weight tuning |
-| **Member B** — Systems & Demo Lead | Feature engineering, honeypot implementation, behavioral multiplier, precompute pipeline, rank.py, Streamlit demo, submission validation, README & docs |
-
+- [Akhilesh Mohanasundaram](https://github.com/Akhikesh-Mohanasundaram)  
+- [Kishore B](https://github.com/Kishore-1803)  
+- [Sanggit Saaran K C S](https://github.com/sanggitsaaran)  
+- [Venkatram K S](https://github.com/venkatramks)  
 ---
 
 <p align="center">
