@@ -242,7 +242,7 @@ We used **Claude** (Anthropic) as a development assistant for code iteration, ar
 
 **Legend Acers** — India.Runs 2026  
 
-- [Akhilesh Mohanasundaram](https://github.com/Akhikesh-Mohanasundaram)  
+- [Akhilesh Mohanasundaram](https://github.com/Akhikesh-Mohanasundaram).  
 - [Kishore B](https://github.com/Kishore-1803)  
 - [Sanggit Saaran K C S](https://github.com/sanggitsaaran)  
 - [Venkatram K S](https://github.com/venkatramks)  
