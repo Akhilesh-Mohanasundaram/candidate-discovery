@@ -15,7 +15,7 @@ def test_run():
         jd_features = json.load(f)
         
     # Load sample candidates
-    dataset_path = r'dataset\[PUB] India_runs_data_and_ai_challenge\India_runs_data_and_ai_challenge\sample_candidates.json'
+    dataset_path = os.path.join('dataset', 'sample_candidates.json')
     with open(dataset_path, 'r', encoding='utf-8') as f:
         candidates = json.load(f)
         

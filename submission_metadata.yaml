@@ -1,0 +1,36 @@
+# Submission Metadata — Legend Acers
+# India.Runs 2026 | Track 01: Data & AI Challenge
+
+team_name: "Legend Acers"
+
+primary_contact:
+  name: "<PRIMARY_CONTACT_NAME>"
+  email: "<PRIMARY_CONTACT_EMAIL>"
+  phone: "<PRIMARY_CONTACT_PHONE>"
+
+team_members:
+  - name: "<MEMBER_A_NAME>"
+    email: "<MEMBER_A_EMAIL>"
+    role: "AI Lead / Evaluation Lead"
+  - name: "<MEMBER_B_NAME>"
+    email: "<MEMBER_B_EMAIL>"
+    role: "Systems Lead / Demo Lead"
+
+github_repository: "https://github.com/<USERNAME>/candidate-discovery"
+sandbox_demo_link: "https://huggingface.co/spaces/<USERNAME>/legend-acers-ranker"
+
+ai_tools_declared:
+  - "Claude"
+
+compute_environment: "Windows 11, 16GB RAM, Python 3.11, CPU-only"
+
+methodology_summary: |
+  Our system implements a hybrid, rule-aware ranking architecture designed to capture
+  nuance beyond keyword matching. We process candidates through a rigorous 6-stage
+  pipeline: (1) JD decomposition into HARD/SOFT/VETO tiers, (2) 7-rule honeypot
+  detection for fabricated profiles, (3) 500+ feature engineering across career,
+  education, and logistics, (4) MiniLM-L6-v2 semantic skill matching weighted by
+  proficiency and duration, (5) 23-signal behavioral availability multiplier with
+  exponential recency decay, and (6) deterministic candidate-specific reasoning
+  generation. The system guarantees our top 100 shortlist is technically aligned,
+  structurally sound, and actually hireable.

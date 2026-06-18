@@ -9,6 +9,7 @@ __pycache__/
 
 # Ignore heavy precomputed artifacts (keep jd_features.json)
 artifacts/*.npz
+artifacts/*.npy
 
 # Ignore environments
 .env
@@ -17,3 +18,12 @@ env/
 
 # Ignore system files
 .DS_Store
+Thumbs.db
+
+# Ignore IDE files
+.vscode/
+.idea/
+
+# Ignore doc conversion artifacts
+*.docx
+read_docx.py
