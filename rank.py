@@ -73,56 +73,17 @@ def run_ranker(candidates_path=None, output_path='submission.csv'):
     top_cid_set = set(top_cids.tolist())
 
     # 4. Fetch raw candidate data for reasoning generation
-    if candidates_path:
-        source_path = candidates_path
-    else:
-        # Fallback resolution (dataset/ is the hackathon bundle)
-        for p in [
-            os.path.join('dataset', 'candidates.jsonl'),
-            os.path.join('dataset', 'candidates.jsonl.gz'),
-            os.path.join('dataset', 'sample_candidates.json'),
-            'candidates.jsonl',
-            'candidates.jsonl.gz',
-        ]:
-            if os.path.exists(p):
-                source_path = p
-                break
-        else:
-            print("Warning: No candidate data file found. Reasoning will be minimal.")
-            source_path = None
-
+    index_path = 'artifacts/candidate_index.json'
     candidate_objects = {}
-
-    if source_path and os.path.exists(source_path):
-        print(f"Scanning {source_path} for top-100 profiles...")
-        if source_path.endswith('.gz'):
-            f = gzip.open(source_path, 'rt', encoding='utf-8')
-            is_jsonl = True
-        elif source_path.endswith('.json'):
-            with open(source_path, 'r', encoding='utf-8') as jf:
-                all_cands = json.load(jf)
-            for cand in all_cands:
-                cid = cand.get("candidate_id")
-                if cid in top_cid_set:
-                    candidate_objects[cid] = cand
-            f = None
-            is_jsonl = False
-        else:
-            f = open(source_path, 'r', encoding='utf-8')
-            is_jsonl = True
-
-        if f and is_jsonl:
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                cand = json.loads(line)
-                cid = cand.get("candidate_id")
-                if cid in top_cid_set:
-                    candidate_objects[cid] = cand
-                    if len(candidate_objects) == 100:
-                        break
-            f.close()
+    if os.path.exists(index_path):
+        print(f"Loading candidate index from {index_path}...")
+        with open(index_path, 'r', encoding='utf-8') as f:
+            candidate_index = json.load(f)
+            for cid in top_cids:
+                if cid in candidate_index:
+                    candidate_objects[cid] = candidate_index[cid]
+    else:
+        print("Warning: candidate_index.json not found. Reasoning will be minimal.")
 
     print(f"Retrieved {len(candidate_objects)} candidate profiles for reasoning.")
 

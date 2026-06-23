@@ -128,7 +128,7 @@ def check_honeypot(candidate):
         for s in skills
         if s.get("proficiency") in ("advanced", "expert")
     ]
-    if len(advanced_skills) >= 5:  # Only check if they claim 5+ advanced/expert skills
+    if len(advanced_skills) >= 2:  # Only check if they claim 2+ advanced/expert skills
         career_desc_text = " ".join(
             c.get("description", "").lower() for c in career
         )
@@ -151,8 +151,8 @@ def check_honeypot(candidate):
                 if skill_name not in full_text:
                     ghost_count += 1
 
-        # Require BOTH: >75% ghosts AND at least 4 ghost skills
-        if ghost_count >= 4 and ghost_count / len(advanced_skills) > 0.75:
+        # Pure-ratio rule: >80% ghosts AND at least 2 advanced skills claimed
+        if ghost_count / len(advanced_skills) > 0.8:
             return True
 
     # ---- 7. Behavioral Ghost ----

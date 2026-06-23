@@ -73,6 +73,8 @@ def precompute(candidates_path=None):
     is_honeypot_flags = []
     is_veto_flags = []
     veto_reasons = []
+    
+    candidate_index = {}
 
     # Open file based on extension
     if source_path.endswith('.gz'):
@@ -129,6 +131,25 @@ def precompute(candidates_path=None):
         is_veto_flags.append(combined_veto)
         veto_reasons.append(veto_reason if veto_reason else ("honeypot" if honeypot else ""))
 
+        candidate_index[c_id] = {
+            "profile": {
+                "years_of_experience": cand.get("profile", {}).get("years_of_experience", 0),
+                "current_title": cand.get("profile", {}).get("current_title", "Engineer"),
+                "location": cand.get("profile", {}).get("location", "undisclosed location"),
+            },
+            "skills": [{"name": s.get("name"), "proficiency": s.get("proficiency"), "duration_months": s.get("duration_months")} for s in cand.get("skills", [])],
+            "career_history": [{"title": j.get("title"), "company": j.get("company"), "duration_months": j.get("duration_months")} for j in cand.get("career_history", [])],
+            "redrob_signals": {
+                "recruiter_response_rate": cand.get("redrob_signals", {}).get("recruiter_response_rate", 1.0),
+                "notice_period_days": cand.get("redrob_signals", {}).get("notice_period_days", 0),
+                "last_active_date": cand.get("redrob_signals", {}).get("last_active_date", ""),
+                "open_to_work_flag": cand.get("redrob_signals", {}).get("open_to_work_flag", False),
+                "github_activity_score": cand.get("redrob_signals", {}).get("github_activity_score", -1),
+                "interview_completion_rate": cand.get("redrob_signals", {}).get("interview_completion_rate", 1.0),
+                "willing_to_relocate": cand.get("redrob_signals", {}).get("willing_to_relocate", False)
+            }
+        }
+
     count = 0
     if is_jsonl and f:
         for line in f:
@@ -150,8 +171,11 @@ def precompute(candidates_path=None):
                 print(f"  Processed {count} candidates... "
                       f"(honeypots: {honeypot_count}, vetoes: {veto_count})")
 
-    # 3. Save feature matrix
+    # 3. Save feature matrix and candidate index
     os.makedirs('artifacts', exist_ok=True)
+    with open('artifacts/candidate_index.json', 'w', encoding='utf-8') as f:
+        json.dump(candidate_index, f)
+        
     np.savez_compressed(
         'artifacts/feature_matrix.npz',
         candidate_ids=np.array(candidate_ids),
