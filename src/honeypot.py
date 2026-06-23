@@ -96,30 +96,19 @@ def check_honeypot(candidate):
                 return True
 
     # ---- 5. Timeline Overlap ----
-    # Two jobs overlapping by >3 months. Fixed: exclude currently-active jobs
-    # (only flag if BOTH jobs have a definite end_date, or use a safe cutoff).
+    # Two jobs overlapping by >3 months. For current jobs, estimate end_date as datetime.now().
     _now = datetime.now()
     for i in range(len(career)):
         start_a = parse_date(career[i].get("start_date"))
-        end_a_raw = career[i].get("end_date")
-        end_a = parse_date(end_a_raw)
-        a_is_current = (end_a is None or end_a_raw == "" or
-                        end_a_raw is None or
-                        career[i].get("is_current", False))
+        end_a = parse_date(career[i].get("end_date"))
+        if career[i].get("is_current", False):
+            end_a = _now
 
         for j in range(i + 1, len(career)):
             start_b = parse_date(career[j].get("start_date"))
-            end_b_raw = career[j].get("end_date")
-            end_b = parse_date(end_b_raw)
-            b_is_current = (end_b is None or end_b_raw == "" or
-                            end_b_raw is None or
-                            career[j].get("is_current", False))
-
-            # Skip if EITHER job is currently active — one active job is normal;
-            # we only flag overlaps between two definitively-ended positions,
-            # OR between one ended and one with a clear start after the other ended.
-            if a_is_current or b_is_current:
-                continue
+            end_b = parse_date(career[j].get("end_date"))
+            if career[j].get("is_current", False):
+                end_b = _now
 
             if start_a and end_a and start_b and end_b:
                 # Find overlap
@@ -185,7 +174,7 @@ if __name__ == "__main__":
     }
     print(f"Bad candidate test: {check_honeypot(mock_bad)}")
 
-    # Test overlap fix — two current jobs should NOT flag
+    # Test overlap fix — two current jobs SHOULD flag
     mock_current = {
         "profile": {"years_of_experience": 5},
         "career_history": [
@@ -197,4 +186,4 @@ if __name__ == "__main__":
         "skills": [],
         "redrob_signals": {}
     }
-    print(f"Two current jobs (should be False): {check_honeypot(mock_current)}")
+    print(f"Two current jobs (should be True): {check_honeypot(mock_current)}")

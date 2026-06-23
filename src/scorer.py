@@ -118,8 +118,8 @@ def semantic_skill_match(candidate_skills, jd_features, precomputed_skill_embedd
         if max_sim > 0.4:
             # Multiplier for proficiency and duration
             prof_w = proficiency_weights.get(prof, 0.5)
-            # Cap duration weight at 36 months for normalization
-            dur_w = min(1.0, duration / 36.0) if duration > 0 else 0.1
+            # Cap duration weight at 36 months for normalization, 0 duration gives 0 weight
+            dur_w = 0.0 if duration == 0 else min(1.0, duration / 36.0)
             # Endorsements give a slight bump (up to 20%)
             end_w = 1.0 + min(0.2, endorsements / 100.0)
 
