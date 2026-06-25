@@ -12,6 +12,9 @@ Implements the 6 veto disqualifier types defined in the JD:
 These are distinct from honeypot traps (which catch fabricated profiles).
 VETO candidates receive a hard 0.0 score.
 """
+import re
+from datetime import datetime
+from honeypot import parse_date
 
 # Consulting firms explicitly called out in the JD
 _CONSULTING_FIRMS = {
@@ -186,7 +189,11 @@ def _check_architect_no_code(current_title, career):
 
     # Sort by most recent first (highest duration_months may not mean most recent,
     # so we use start_date if available)
-    sorted_career = sorted(career, key=lambda c: c.get("start_date", ""), reverse=True)
+    def get_sort_key(c):
+        d = parse_date(c.get("start_date"))
+        return d if d is not None else datetime.min
+
+    sorted_career = sorted(career, key=get_sort_key, reverse=True)
     recent_months = 0
     all_arch = True
     for job in sorted_career:
@@ -221,7 +228,7 @@ def _check_consulting_only(all_companies):
 
     consulting_count = sum(
         1 for c in valid_companies
-        if any(firm in c for firm in _CONSULTING_FIRMS)
+        if any(re.search(r'\b' + re.escape(firm) + r'\b', c) for firm in _CONSULTING_FIRMS)
     )
 
     # If ALL companies are consulting firms → VETO
