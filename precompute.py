@@ -151,17 +151,26 @@ def precompute(candidates_path=None):
         }
 
     count = 0
+    skipped_count = 0
+    line_number = 0
     if is_jsonl and f:
         for line in f:
+            line_number += 1
             line = line.strip()
             if not line:
                 continue
-            cand = json.loads(line)
+            try:
+                cand = json.loads(line)
+            except json.JSONDecodeError as e:
+                print(f"Skipping malformed JSON at line {line_number}: {e}")
+                skipped_count += 1
+                continue
+                
             process_candidate(cand)
             count += 1
             if count % 10000 == 0:
                 print(f"  Processed {count} candidates... "
-                      f"(honeypots: {honeypot_count}, vetoes: {veto_count})")
+                      f"(honeypots: {honeypot_count}, vetoes: {veto_count}, skipped: {skipped_count})")
         f.close()
     elif not is_jsonl:
         for cand in candidates_list:
@@ -188,6 +197,7 @@ def precompute(candidates_path=None):
         veto_reasons=np.array(veto_reasons)
     )
     print(f"\nPrecomputation complete. Processed {count} candidates.")
+    print(f"  Skipped malformed lines: {skipped_count}")
     print(f"  Honeypots detected: {honeypot_count}")
     print(f"  JD VETO disqualified: {veto_count}")
     print(f"  Total vetoed: {honeypot_count + veto_count}")

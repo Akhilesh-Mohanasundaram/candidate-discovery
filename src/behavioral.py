@@ -19,8 +19,9 @@ from datetime import datetime
 _PREFERRED_WORK_MODES = {"hybrid", "flexible"}
 
 # Reasonable salary band for a Senior AI Engineer (5-9 YoE) in India — INR LPA
-_SALARY_FLOOR_LPA = 15
-_SALARY_CEILING_LPA = 80
+# Source: AmbitionBox / Glassdoor (India 2026 market data)
+_SALARY_FLOOR_LPA = 20
+_SALARY_CEILING_LPA = 75
 
 
 def calculate_behavioral_multiplier(signals):
