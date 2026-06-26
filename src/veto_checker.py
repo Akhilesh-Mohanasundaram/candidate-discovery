@@ -222,9 +222,7 @@ def _check_consulting_only(all_companies):
     if not valid_companies:
         return False
 
-    # Need at least 2 companies to establish a pattern
-    if len(valid_companies) < 2:
-        return False
+    # A single consulting company is sufficient to trigger the veto if it's their entire career
 
     consulting_count = sum(
         1 for c in valid_companies

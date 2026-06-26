@@ -232,7 +232,7 @@ def calculate_behavioral_multiplier(signals):
         avg_assessment = sum(assessments.values()) / len(assessments)
         assessment_score = min(1.0, avg_assessment / 80.0)
     else:
-        assessment_score = 0.3  # No assessments, slight penalty
+        assessment_score = 0.5  # No assessments, neutral
 
     # Signal 16: github_activity_score (-1 = no GitHub)
     github = signals.get("github_activity_score", -1)
