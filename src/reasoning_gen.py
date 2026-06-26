@@ -12,6 +12,19 @@ The reasoning column is manually reviewed at Stage 4.  The 6 checks are:
   5. Variation across candidates
   6. Rank consistency
 """
+from constants import VetoType
+
+_VETO_REASON_MAP = {
+    VetoType.PURE_RESEARCH.value: "career consists primarily of academic/research roles without production deployment",
+    VetoType.LANGCHAIN_WRAPPER.value: "AI experience is recent LLM-wrapper tooling without pre-LLM ML production background",
+    VetoType.ARCHITECT_NO_CODE.value: "recent career has been in architecture/leadership roles without hands-on coding",
+    VetoType.CONSULTING_ONLY.value: "entire career at IT consulting firms without product-company experience",
+    VetoType.TITLE_CHASER.value: "career pattern shows frequent company switches with average tenure under 18 months",
+    VetoType.CV_SPEECH_ROBOTICS.value: "primary expertise is in computer vision/speech/robotics without NLP/IR crossover",
+}
+
+for veto in VetoType:
+    assert veto.value in _VETO_REASON_MAP, f"Missing reasoning mapping for VETO type: {veto.name}"
 
 
 def generate_reasoning(candidate, jd_features, semantic_score, behavioral_multiplier,
@@ -207,17 +220,8 @@ def _generate_veto_reasoning(candidate, veto_reason=None):
     title = profile.get("current_title", "Unknown")
     yoe = profile.get("years_of_experience", 0)
 
-    _reason_map = {
-        "pure_research": "career consists primarily of academic/research roles without production deployment",
-        "langchain_wrapper": "AI experience is recent LLM-wrapper tooling without pre-LLM ML production background",
-        "architect_no_code": "recent career has been in architecture/leadership roles without hands-on coding",
-        "consulting_only": "entire career at IT consulting firms without product-company experience",
-        "title_chaser": "career pattern shows frequent company switches with average tenure under 18 months",
-        "cv_speech_robotics": "primary expertise is in computer vision/speech/robotics without NLP/IR crossover",
-    }
-
-    if veto_reason and veto_reason in _reason_map:
-        detail = _reason_map[veto_reason]
+    if veto_reason and veto_reason in _VETO_REASON_MAP:
+        detail = _VETO_REASON_MAP[veto_reason]
         return (f"Disqualified: {title} ({yoe:.0f} YoE) — {detail}, "
                 f"which the JD explicitly lists as a disqualifier.")
 

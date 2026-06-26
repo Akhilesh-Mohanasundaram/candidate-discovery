@@ -15,6 +15,7 @@ VETO candidates receive a hard 0.0 score.
 import re
 from datetime import datetime
 from honeypot import parse_date
+from constants import VetoType
 
 # Consulting firms explicitly called out in the JD
 _CONSULTING_FIRMS = {
@@ -103,27 +104,27 @@ def check_veto(candidate, jd_features):
 
     # ---- VETO 1: Pure Research ----
     if _check_pure_research(all_titles, career):
-        return True, "pure_research"
+        return True, VetoType.PURE_RESEARCH.value
 
     # ---- VETO 2: LangChain Wrapper ----
     if _check_langchain_wrapper(skill_names, career):
-        return True, "langchain_wrapper"
+        return True, VetoType.LANGCHAIN_WRAPPER.value
 
     # ---- VETO 3: Architect / No Code ----
     if _check_architect_no_code(current_title, career):
-        return True, "architect_no_code"
+        return True, VetoType.ARCHITECT_NO_CODE.value
 
     # ---- VETO 4: Consulting Only ----
     if _check_consulting_only(all_companies):
-        return True, "consulting_only"
+        return True, VetoType.CONSULTING_ONLY.value
 
     # ---- VETO 5: Title Chaser ----
     if _check_title_chaser(career):
-        return True, "title_chaser"
+        return True, VetoType.TITLE_CHASER.value
 
     # ---- VETO 6: CV / Speech / Robotics Only ----
     if _check_cv_speech_robotics(skill_names):
-        return True, "cv_speech_robotics"
+        return True, VetoType.CV_SPEECH_ROBOTICS.value
 
     return False, None
 

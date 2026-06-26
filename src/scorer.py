@@ -95,8 +95,24 @@ def semantic_skill_match(candidate_skills, jd_features, precomputed_skill_embedd
         "expert": 1.0
     }
 
-    total_score = 0.0
-    max_possible_score = len(jd_features.get("hard_requirements", [])) * 1.0
+    hard_reqs = jd_features.get("hard_requirements", [])
+    soft_prefs = jd_features.get("soft_preferences", [])
+    max_possible_score = len(hard_reqs) * 1.0
+
+    target_to_req = []
+    req_idx = 0
+    for req in hard_reqs:
+        target_to_req.append(req_idx)
+        for _ in req.get("aliases", []):
+            target_to_req.append(req_idx)
+        req_idx += 1
+    for pref in soft_prefs:
+        target_to_req.append(req_idx)
+        for _ in pref.get("aliases", []):
+            target_to_req.append(req_idx)
+        req_idx += 1
+
+    best_score_per_req = [0.0] * req_idx
 
     for c_skill in candidate_skills:
         name = c_skill.get("name", "")
@@ -104,27 +120,26 @@ def semantic_skill_match(candidate_skills, jd_features, precomputed_skill_embedd
         endorsements = c_skill.get("endorsements", 0)
         duration = c_skill.get("duration_months", 0)
 
-        # Calculate semantic similarity against all target skills
         if precomputed_skill_embeddings and name in precomputed_skill_embeddings:
             c_emb = precomputed_skill_embeddings[name]
         else:
             c_emb = model.encode([name])[0]
 
-        # Cosine similarity
         similarities = cosine_similarity([c_emb], target_embeddings)[0]
-        max_sim = np.max(similarities)
 
-        # Only count if it's reasonably similar
-        if max_sim > 0.4:
-            # Multiplier for proficiency and duration
-            prof_w = proficiency_weights.get(prof, 0.5)
-            # Cap duration weight at 36 months for normalization, 0 duration gives 0 weight
-            dur_w = 0.0 if duration == 0 else min(1.0, duration / 36.0)
-            # Endorsements give a slight bump (up to 20%)
-            end_w = 1.0 + min(0.2, endorsements / 100.0)
+        prof_w = proficiency_weights.get(prof, 0.5)
+        dur_w = 0.0 if duration == 0 else min(1.0, duration / 36.0)
+        end_w = 1.0 + min(0.2, endorsements / 100.0)
+        c_weight = prof_w * dur_w * end_w
 
-            skill_score = max_sim * prof_w * dur_w * end_w
-            total_score += skill_score
+        for t_idx, sim in enumerate(similarities):
+            if sim > 0.4:
+                score = sim * c_weight
+                req_i = target_to_req[t_idx]
+                if score > best_score_per_req[req_i]:
+                    best_score_per_req[req_i] = score
+
+    total_score = sum(best_score_per_req)
 
     # Normalize score between 0 and 1
     normalized = min(1.0, total_score / max(1.0, max_possible_score))
