@@ -55,8 +55,8 @@ def calculate_logistics_score(candidate, target_locations):
     score = 1.0
     
     # Location
-    location = profile.get("location", "").lower()
-    is_match = any(t.lower() in location for t in target_locations)
+    location = str(candidate.get("profile", {}).get("location", "")).lower()
+    is_match = any(re.search(r'\b' + re.escape(t.lower()) + r'\b', location) for t in target_locations)
     if not is_match and not signals.get("willing_to_relocate", False):
         score *= 0.5 # Penalty for bad location and unwilling to relocate
         

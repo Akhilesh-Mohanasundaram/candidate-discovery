@@ -87,7 +87,7 @@ Implements **7 strict detection rules** to catch fabricated profiles before they
 | 3 | **Keyword Stuffer** | ≥10 skills at "expert" level |
 | 4 | **Title Mismatch** | AI skills but only non-technical titles throughout career |
 | 5 | **Timeline Overlap** | 3+ month overlap between concurrent positions (handles 'current' jobs dynamically) |
-| 6 | **Ghost Skills** | >50% of advanced/expert skills absent from descriptions (adjusted to catch low-volume fabrications) |
+| 6 | **Ghost Skills** | >80% of advanced/expert skills absent from descriptions (adjusted to catch low-volume fabrications) |
 | 7 | **Behavioral Ghost** | Inactive >180 days AND <5% recruiter response rate |
 
 All honeypot candidates receive a hard **0.0 score**.
@@ -101,7 +101,7 @@ Applies the **6 disqualifier rules** explicitly stated in the JD to filter misal
 | 2 | **LangChain Wrapper** | LLM-wrapper-only skills (<12mo) without pre-LLM ML production background |
 | 3 | **Architect / No Code** | Current title is architect/VP + last 18+ months in non-coding roles (uses robust datetime sorting) |
 | 4 | **Consulting Only** | Entire career at TCS/Infosys/Wipro/Accenture/Cognizant/Capgemini (catches single-company careers via word-boundary matching) |
-| 5 | **Title Chaser** | Average tenure <18 months across 3+ job hops |
+| 5 | **Title Chaser** | Average tenure <18 months across 4+ positions (3+ job hops) |
 | 6 | **CV/Speech/Robotics** | Primary expertise in CV/speech/robotics without NLP/IR crossover |
 
 All VETO candidates also receive a hard **0.0 score**.

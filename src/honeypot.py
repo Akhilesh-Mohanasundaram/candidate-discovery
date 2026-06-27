@@ -15,6 +15,7 @@ Traps:
 """
 import re
 from datetime import datetime
+from constants import REFERENCE_DATE
 
 # Technical title keywords — if ANY title matches, the candidate is technical
 _TECH_TITLE_KEYWORDS = [
@@ -96,8 +97,8 @@ def check_honeypot(candidate):
                 return True
 
     # ---- 5. Timeline Overlap ----
-    # Two jobs overlapping by >3 months. For current jobs, estimate end_date as datetime.now().
-    _now = datetime.now()
+    # Two jobs overlapping by >3 months. For current jobs, estimate end_date as REFERENCE_DATE.
+    _now = REFERENCE_DATE
     for i in range(len(career)):
         start_a = parse_date(career[i].get("start_date"))
         end_a = parse_date(career[i].get("end_date"))
@@ -152,7 +153,8 @@ def check_honeypot(candidate):
                     ghost_count += 1
 
         # Pure-ratio rule: >80% ghosts AND at least 2 advanced skills claimed
-        if ghost_count / len(advanced_skills) > 0.8:
+        # 80% threshold is more conservative than the original 50% to reduce false positives on real candidates
+        if ghost_count >= 3 and ghost_count / advanced_count > 0.8:
             return True
 
     # ---- 7. Behavioral Ghost ----

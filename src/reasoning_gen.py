@@ -12,7 +12,9 @@ The reasoning column is manually reviewed at Stage 4.  The 6 checks are:
   5. Variation across candidates
   6. Rank consistency
 """
-from constants import VetoType
+from datetime import datetime
+import re
+from constants import VetoType, REFERENCE_DATE
 
 _VETO_REASON_MAP = {
     VetoType.PURE_RESEARCH.value: "career consists primarily of academic/research roles without production deployment",
@@ -164,8 +166,7 @@ def generate_reasoning(candidate, jd_features, semantic_score, behavioral_multip
 
     if last_active:
         try:
-            from datetime import datetime
-            days_ago = (datetime.now() - datetime.strptime(last_active, "%Y-%m-%d")).days
+            days_ago = (REFERENCE_DATE - datetime.strptime(last_active, "%Y-%m-%d")).days
             if days_ago > 120:
                 concerns.append(f"last active {days_ago} days ago")
         except (ValueError, TypeError):
@@ -185,7 +186,7 @@ def generate_reasoning(candidate, jd_features, semantic_score, behavioral_multip
 
     # Location mismatch
     target_locs = jd_features.get("target_locations", [])
-    if target_locs and not any(t.lower() in location.lower() for t in target_locs):
+    if target_locs and not any(re.search(r'\b' + re.escape(t.lower()) + r'\b', location.lower()) for t in target_locs):
         willing = signals.get("willing_to_relocate", False)
         if not willing:
             concerns.append(f"based in {location}, not in target cities and unwilling to relocate")

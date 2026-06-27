@@ -13,6 +13,7 @@ All 23 signals from redrob_signals_doc.txt are consumed:
 """
 import math
 from datetime import datetime
+from constants import REFERENCE_DATE
 
 
 # JD specifies hybrid work mode in Pune/Noida
@@ -45,7 +46,7 @@ def calculate_behavioral_multiplier(signals):
     # Accumulate a composite score from 0..1 across all signal groups,
     # then map to the [0.3, 1.0] range at the end.
     score_components = []
-    _now = datetime.now()
+    _now = REFERENCE_DATE
 
     # =========================================================================
     # GROUP 1: Activity & Recency (Signals 2, 3, 4, 6) — Weight: 25%

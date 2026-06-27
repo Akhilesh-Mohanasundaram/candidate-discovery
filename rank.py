@@ -83,7 +83,8 @@ def run_ranker(candidates_path=None, output_path='submission.csv'):
                 if cid in candidate_index:
                     candidate_objects[cid] = candidate_index[cid]
     else:
-        print("Warning: candidate_index.json not found. Reasoning will be minimal.")
+        print("Error: candidate_index.json not found. Run precompute.py first.")
+        sys.exit(1)
 
     print(f"Retrieved {len(candidate_objects)} candidate profiles for reasoning.")
 

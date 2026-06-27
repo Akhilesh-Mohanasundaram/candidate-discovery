@@ -1,4 +1,8 @@
 from enum import Enum
+from datetime import datetime
+
+REFERENCE_DATE = datetime(2026, 6, 23)
+
 
 class VetoType(str, Enum):
     PURE_RESEARCH = "pure_research"
