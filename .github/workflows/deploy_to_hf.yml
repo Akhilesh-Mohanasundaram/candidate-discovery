@@ -1,0 +1,25 @@
+name: Deploy to HuggingFace Spaces
+
+on:
+  push:
+    branches:
+      - main-update
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: Push to HuggingFace Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Actions"
+          git remote add huggingface https://venkat-1212:${HF_TOKEN}@huggingface.co/spaces/venkat-1212/legend-acers-ranker
+          git push huggingface main-update:main --force
