@@ -1,10 +1,10 @@
 """
 Legend Acers — Intelligent Candidate Discovery Sandbox
 =======================================================
-Streamlit demo app for India.Runs 2026 Hackathon (Track 01).
-Accepts ≤100 candidate JSON, runs the full ranking pipeline, outputs ranked CSV.
+Local development version of the Streamlit demo app.
+Run with: cd sandbox && streamlit run app.py
 
-Deployed on HuggingFace Spaces.
+For HuggingFace Spaces deployment, see app.py at the repo root.
 """
 import streamlit as st
 import pandas as pd

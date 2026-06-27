@@ -4,33 +4,43 @@
 team_name: "Legend Acers"
 
 primary_contact:
-  name: "<PRIMARY_CONTACT_NAME>"
-  email: "<PRIMARY_CONTACT_EMAIL>"
-  phone: "<PRIMARY_CONTACT_PHONE>"
+  name: "Venkatram K S"
+  email: "<VENKATRAM_EMAIL>"       # TODO: fill in before submission
+  phone: "<VENKATRAM_PHONE>"       # TODO: fill in before submission
 
 team_members:
-  - name: "<MEMBER_A_NAME>"
-    email: "<MEMBER_A_EMAIL>"
-    role: "AI Lead / Evaluation Lead"
-  - name: "<MEMBER_B_NAME>"
-    email: "<MEMBER_B_EMAIL>"
+  - name: "Akhilesh Mohanasundaram"
+    email: "<AKHILESH_EMAIL>"      # TODO: fill in before submission
+    role: "AI Lead / Pipeline Architect"
+  - name: "Kishore B"
+    email: "<KISHORE_EMAIL>"       # TODO: fill in before submission
+    role: "Evaluation Lead / Scoring"
+  - name: "Sanggit Saaran K C S"
+    email: "<SANGGIT_EMAIL>"       # TODO: fill in before submission
+    role: "Feature Engineering Lead"
+  - name: "Venkatram K S"
+    email: "<VENKATRAM_EMAIL>"     # TODO: fill in before submission
     role: "Systems Lead / Demo Lead"
 
-github_repository: "https://github.com/<USERNAME>/candidate-discovery"
-sandbox_demo_link: "https://huggingface.co/spaces/<USERNAME>/legend-acers-ranker"
+github_repository: "https://github.com/Akhilesh-Mohanasundaram/candidate-discovery"
+sandbox_demo_link: "https://huggingface.co/spaces/venkat-1212/legend-acers-ranker"
 
 ai_tools_declared:
-  - "Claude"
+  - "Claude (Anthropic)"
+  - "Gemini (Google)"
 
-compute_environment: "Windows 11, 16GB RAM, Python 3.11, CPU-only"
+compute_environment: "Windows 11, 16GB RAM, Python 3.11 (local) / Python 3.13 (HuggingFace Spaces), CPU-only"
 
 methodology_summary: |
   Our system implements a hybrid, rule-aware ranking architecture designed to capture
   nuance beyond keyword matching. We process candidates through a rigorous 6-stage
   pipeline: (1) JD decomposition into HARD/SOFT/VETO tiers, (2) 7-rule honeypot
-  detection for fabricated profiles, (3) 500+ feature engineering across career,
-  education, and logistics, (4) MiniLM-L6-v2 semantic skill matching weighted by
-  proficiency and duration, (5) 23-signal behavioral availability multiplier with
-  exponential recency decay, and (6) deterministic candidate-specific reasoning
-  generation. The system guarantees our top 100 shortlist is technically aligned,
-  structurally sound, and actually hireable.
+  detection for fabricated profiles, (3) multi-signal feature engineering across career,
+  logistics, and YoE alignment, (4) MiniLM-L6-v2 semantic skill matching weighted by
+  proficiency and duration (zero-duration skills strictly yield zero weight),
+  (5) 23-signal behavioral availability multiplier with exponential recency decay
+  across 5 weighted groups, and (6) deterministic candidate-specific reasoning
+  generation grounded in actual profile data. All 7 honeypot traps and 6 JD VETO
+  disqualifiers are applied as hard gates (score 0.0) before ranking. The system
+  guarantees our top 100 shortlist is technically aligned, fraud-free, structurally
+  sound, and actually hireable.
