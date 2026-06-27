@@ -29,6 +29,13 @@ Traditional ATS systems rely on keyword matching, which fails to capture what ac
 │                                         └───────────────┘             │
 │                                                │                       │
 │                                                ▼                       │
+│                                         ┌───────────────┐             │
+│                                         │  Behavioral   │             │
+│                                         │  Multiplier   │             │
+│                                         │     (S5)      │             │
+│                                         └───────────────┘             │
+│                                                │                       │
+│                                                ▼                       │
 │                                         feature_matrix.npz             │
 └─────────────────────────────────────────────────────────────────────────┘
                                     │
@@ -37,9 +44,9 @@ Traditional ATS systems rely on keyword matching, which fails to capture what ac
 │                      ONLINE PHASE (rank.py) — ≤ 5 min CPU              │
 │                                                                         │
 │  ┌──────────────────┐   ┌───────────────┐   ┌────────────────────────┐ │
-│  │  Vectorized       │──▶│  Behavioral   │──▶│  Reasoning Generation │ │
+│  │  Vectorized       │──▶│  Apply        │──▶│  Reasoning Generation │ │
 │  │  Score Fusion     │   │  Multiplier   │   │  + CSV Output         │ │
-│  │  (numpy)          │   │  (S5)         │   │  (S6)                 │ │
+│  │  (numpy)          │   │               │   │  (S6)                 │ │
 │  └──────────────────┘   └───────────────┘   └────────────────────────┘ │
 │                                                        │               │
 │                                                        ▼               │
