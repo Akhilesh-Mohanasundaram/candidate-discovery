@@ -2,7 +2,7 @@
 title: Legend Acers Candidate Ranker
 emoji: ⚡
 colorFrom: purple
-colorTo: teal
+colorTo: green
 sdk: streamlit
 sdk_version: 1.37.1
 app_file: app.py
