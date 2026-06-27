@@ -55,6 +55,8 @@ Parses the job description into structured requirement tiers:
 - **SOFT preferences**: Nice-to-have skills (LLM fine-tuning, learning-to-rank, HR-tech)
 - **VETO disqualifiers**: Automatic rejection criteria (pure research, consulting-only, title-chaser)
 
+*Note (Tech Debt): Due to the fixed JD in this hackathon, these tiers are currently hardcoded in `jd_parser.py` rather than dynamically extracted via an LLM. Dynamic extraction would be required for a production system.*
+
 ### Stage 2a — Honeypot & Trap Detection
 Implements **7 strict detection rules** to catch fabricated profiles before they enter the scoring pipeline:
 

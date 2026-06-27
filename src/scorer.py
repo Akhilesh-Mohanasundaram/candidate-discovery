@@ -134,7 +134,7 @@ def semantic_skill_match(candidate_skills, jd_features, precomputed_skill_embedd
         c_weight = prof_w * dur_w * end_w
 
         for t_idx, sim in enumerate(similarities):
-            if sim > 0.4:
+            if sim > 0.45:
                 score = sim * c_weight
                 req_i = target_to_req[t_idx]
                 if score > best_score_per_req[req_i]:

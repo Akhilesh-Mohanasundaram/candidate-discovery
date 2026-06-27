@@ -188,7 +188,7 @@ def calculate_behavioral_multiplier(signals):
     elif work_mode == "onsite":
         work_mode_score = 0.8  # Onsite is compatible with hybrid
     elif work_mode == "remote":
-        work_mode_score = 0.5  # Remote-only may not fit hybrid expectation
+        work_mode_score = 0.7  # Remote-only may not fit hybrid expectation (soft penalty)
     else:
         work_mode_score = 0.6  # Unknown / not specified
 
