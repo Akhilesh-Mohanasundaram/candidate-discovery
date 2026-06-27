@@ -1,3 +1,5 @@
+import re
+
 def calculate_career_quality_score(career_history, expected_yoe_min, expected_yoe_max):
     """
     Evaluates title progression, stability, and relevance.
