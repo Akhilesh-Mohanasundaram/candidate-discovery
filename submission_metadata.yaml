@@ -4,23 +4,27 @@
 team_name: "Legend Acers"
 
 primary_contact:
-  name: "Venkatram K S"
-  email: "<VENKATRAM_EMAIL>"       # TODO: fill in before submission
-  phone: "<VENKATRAM_PHONE>"       # TODO: fill in before submission
+  name: "Kishore B"
+  email: "kishorebalajisivani@gmail.com"
+  phone: "9952379203"
 
 team_members:
-  - name: "Akhilesh Mohanasundaram"
-    email: "<AKHILESH_EMAIL>"      # TODO: fill in before submission
-    role: "AI Lead / Pipeline Architect"
   - name: "Kishore B"
-    email: "<KISHORE_EMAIL>"       # TODO: fill in before submission
-    role: "Evaluation Lead / Scoring"
-  - name: "Sanggit Saaran K C S"
-    email: "<SANGGIT_EMAIL>"       # TODO: fill in before submission
-    role: "Feature Engineering Lead"
-  - name: "Venkatram K S"
-    email: "<VENKATRAM_EMAIL>"     # TODO: fill in before submission
+    email: "kishorebalajisivani@gmail.com"
+    phone: "9952379203"
     role: "Systems Lead / Demo Lead"
+  - name: "Sanggit Saaran K C S"
+    email: "sanggitkovai@gmail.com"
+    phone: "8681810054"
+    role: "Feature Engineering Lead"
+  - name: "Akhilesh Mohanasundaram"
+    email: "akhileshmohan2005@gmail.com"
+    phone: "9080347945"
+    role: "AI Lead / Pipeline Architect"
+  - name: "Venkatram K S"
+    email: "venkatram.ks@gmail.com"
+    phone: "6380150516"
+    role: "Evaluation Lead / Scoring"
 
 github_repository: "https://github.com/Akhilesh-Mohanasundaram/candidate-discovery"
 sandbox_demo_link: "https://huggingface.co/spaces/venkat-1212/legend-acers-ranker"
