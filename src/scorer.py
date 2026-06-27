@@ -11,6 +11,7 @@ Score Fusion:
 VETO/honeypot candidates always return 0.0.
 """
 import numpy as np
+import math
 from sklearn.metrics.pairwise import cosine_similarity
 try:
     from sentence_transformers import SentenceTransformer
@@ -129,7 +130,7 @@ def semantic_skill_match(candidate_skills, jd_features, precomputed_skill_embedd
 
         prof_w = proficiency_weights.get(prof, 0.5)
         dur_w = 0.0 if duration == 0 else min(1.0, duration / 36.0)
-        end_w = 1.0 + min(0.2, endorsements / 100.0)
+        end_w = 1.0 + min(0.05, math.log1p(endorsements) / 100.0)
         c_weight = prof_w * dur_w * end_w
 
         for t_idx, sim in enumerate(similarities):

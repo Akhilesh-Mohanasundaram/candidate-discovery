@@ -92,7 +92,7 @@ def generate_reasoning(candidate, jd_features, semantic_score, behavioral_multip
         c_title = job.get("title", "")
         c_company = job.get("company", "")
         c_dur = job.get("duration_months", 0)
-        if c_dur >= 24 and any(k in c_title.lower() for k in [
+        if c_dur >= 6 and any(k in c_title.lower() for k in [
             "engineer", "developer", "scientist", "ml", "ai", "data",
             "search", "ranking", "retrieval",
         ]):
