@@ -66,8 +66,8 @@ Implements **7 strict detection rules** to catch fabricated profiles before they
 | 2 | **Fake Expert** | "Expert" proficiency with 0 months duration |
 | 3 | **Keyword Stuffer** | ≥10 skills at "expert" level |
 | 4 | **Title Mismatch** | AI skills but only non-technical titles throughout career |
-| 5 | **Timeline Overlap** | 3+ month overlap between concurrent positions |
-| 6 | **Ghost Skills** | >50% of advanced/expert skills absent from career descriptions |
+| 5 | **Timeline Overlap** | 3+ month overlap between concurrent positions (handles 'current' jobs dynamically) |
+| 6 | **Ghost Skills** | >50% of advanced/expert skills absent from descriptions (adjusted to catch low-volume fabrications) |
 | 7 | **Behavioral Ghost** | Inactive >180 days AND <5% recruiter response rate |
 
 All honeypot candidates receive a hard **0.0 score**.
@@ -79,8 +79,8 @@ Applies the **6 disqualifier rules** explicitly stated in the JD to filter misal
 |---|-----------|-----------------|
 | 1 | **Pure Research** | 80%+ career time in academic/research-only roles without production deployment |
 | 2 | **LangChain Wrapper** | LLM-wrapper-only skills (<12mo) without pre-LLM ML production background |
-| 3 | **Architect / No Code** | Current title is architect/VP + last 18+ months in non-coding roles |
-| 4 | **Consulting Only** | Entire career at TCS/Infosys/Wipro/Accenture/Cognizant/Capgemini |
+| 3 | **Architect / No Code** | Current title is architect/VP + last 18+ months in non-coding roles (uses robust datetime sorting) |
+| 4 | **Consulting Only** | Entire career at TCS/Infosys/Wipro/Accenture/Cognizant/Capgemini (catches single-company careers via word-boundary matching) |
 | 5 | **Title Chaser** | Average tenure <18 months across 3+ job hops |
 | 6 | **CV/Speech/Robotics** | Primary expertise in CV/speech/robotics without NLP/IR crossover |
 
@@ -102,8 +102,10 @@ Final Score = Raw Score × Behavioral Multiplier
 
 **Semantic Skill Matching** uses `all-MiniLM-L6-v2` (sentence-transformers) to compute cosine similarity between candidate skills and JD requirements, weighted by:
 - Proficiency level (beginner: 0.3 → expert: 1.0)
-- Duration of usage (normalized to 36 months)
-- Endorsement count (up to 20% bonus)
+- Duration of usage (normalized to 36 months, zero duration strictly yields zero weight)
+- Endorsement count (logarithmic scaling, up to 5% bonus)
+
+Matches are strictly grouped by the underlying JD requirement to prevent artificial score saturation, and the cosine similarity threshold is aggressively tuned (0.45) via ablation testing to ensure high signal-to-noise ratio.
 
 VETO checks are applied first — any disqualified profile returns 0.0 immediately.
 
@@ -115,17 +117,17 @@ Analyzes all **23 Redrob behavioral signals** organized into 5 weighted groups:
 | Activity & Recency | 25% | `signup_date`, `last_active_date`, `open_to_work_flag`, `applications_submitted_30d` |
 | Responsiveness | 22% | `recruiter_response_rate`, `avg_response_time_hours` |
 | Profile Quality | 13% | `profile_completeness_score`, `connection_count`, `endorsements_received`, verification flags |
-| Hiring Readiness | 20% | `notice_period_days`, `expected_salary_range_inr_lpa`, `preferred_work_mode`, `willing_to_relocate`, `interview_completion_rate`, `offer_acceptance_rate` |
-| Market Demand | 20% | `profile_views_received_30d`, `skill_assessment_scores`, `github_activity_score`, `search_appearance_30d`, `saved_by_recruiters_30d` |
+| Hiring Readiness | 20% | `notice_period_days`, `expected_salary_range_inr_lpa` (realistic baseline 20–75 LPA), `preferred_work_mode` (remote-preference receives soft 0.7x penalty), `willing_to_relocate`, `interview_completion_rate`, `offer_acceptance_rate` |
+| Market Demand | 20% | `profile_views_received_30d`, `skill_assessment_scores` (passive candidates receive neutral 0.5 floor), `github_activity_score`, `search_appearance_30d`, `saved_by_recruiters_30d` |
 
 The multiplier is clamped to **[0.3 – 1.0]** using exponential recency decay (`e^(-days/90)`).
 
 ### Stage 6 — Reasoning Generation
 Generates candidate-specific, non-templated reasoning that:
-- References actual skills, titles, and YoE from the profile
+- References actual skills, titles, and YoE from the profile (including impactful startup stints down to 6 months)
 - Connects to specific JD requirements
 - Honestly surfaces concerns (long notice period, low response rate, inactivity)
-- Adapts tone to match the candidate's rank position
+- Adapts tone to match the candidate's rank position (reasons are mapped strictly via a central `VetoType` enum)
 
 ## 📂 Repository Structure
 
@@ -156,6 +158,9 @@ legend-acers/
 │   ├── scorer.py                      # Stage 4: Semantic matching + score fusion
 │   ├── behavioral.py                  # Stage 5: 23-signal multiplier
 │   └── reasoning_gen.py               # Stage 6: Candidate-specific justifications
+│
+├── tests/                             # Fully automated pytest suite simulating synthetic profiles and edge cases
+│   └── test_pipeline.py               # Unit tests covering honeypot, veto, behavioral, and scoring
 │
 ├── artifacts/                         # Pre-computed state
 │   ├── jd_features.json               # Pre-parsed JD requirements
@@ -190,6 +195,8 @@ This generates `artifacts/feature_matrix.npz` containing pre-scored features for
 ```bash
 python rank.py --candidates ./candidates.jsonl --out ./submission.csv
 ```
+
+*Note: `rank.py` relies entirely on a lightweight candidate index generated during precompute, avoiding massive redundant sequential file scans during the online phase.*
 
 ### 4. Validate the Submission
 
