@@ -154,7 +154,7 @@ def check_honeypot(candidate):
 
         # Pure-ratio rule: >80% ghosts AND at least 2 advanced skills claimed
         # 80% threshold is more conservative than the original 50% to reduce false positives on real candidates
-        if ghost_count >= 3 and ghost_count / advanced_count > 0.8:
+        if ghost_count >= 3 and ghost_count / len(advanced_skills) > 0.8:
             return True
 
     # ---- 7. Behavioral Ghost ----
