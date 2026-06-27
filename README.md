@@ -1,16 +1,3 @@
----
-title: Legend Acers Candidate Ranker
-emoji: ⚡
-colorFrom: purple
-colorTo: green
-sdk: streamlit
-sdk_version: 1.37.1
-app_file: app.py
-pinned: false
-license: mit
-short_description: AI-powered candidate ranking for India.Runs 2026 Track 01
----
-
 <div align="center">
 
 # ⚡ Intelligent Candidate Discovery & Ranking System
