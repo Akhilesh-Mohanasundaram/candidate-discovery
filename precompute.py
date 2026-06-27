@@ -6,7 +6,7 @@ This step may exceed 5 minutes — that is allowed by the spec.
 The ranking step (rank.py) must complete within 5 minutes.
 
 Usage:
-    python precompute.py --candidates ./candidates.jsonl
+    python precompute.py --candidates dataset/candidates.jsonl
 """
 import os
 import sys
@@ -168,17 +168,21 @@ def precompute(candidates_path=None):
                 
             process_candidate(cand)
             count += 1
-            if count % 10000 == 0:
-                print(f"  Processed {count} candidates... "
-                      f"(honeypots: {honeypot_count}, vetoes: {veto_count}, skipped: {skipped_count})")
+            if count % 100 == 0:
+                sys.stdout.write(f"\r  Processed {count} candidates... "
+                                 f"(honeypots: {honeypot_count}, vetoes: {veto_count}, skipped: {skipped_count})")
+                sys.stdout.flush()
         f.close()
+        print()  # newline after loop
     elif not is_jsonl:
         for cand in candidates_list:
             process_candidate(cand)
             count += 1
-            if count % 10000 == 0:
-                print(f"  Processed {count} candidates... "
-                      f"(honeypots: {honeypot_count}, vetoes: {veto_count})")
+            if count % 100 == 0:
+                sys.stdout.write(f"\r  Processed {count} candidates... "
+                                 f"(honeypots: {honeypot_count}, vetoes: {veto_count})")
+                sys.stdout.flush()
+        print()  # newline after loop
 
     # 3. Save feature matrix and candidate index
     os.makedirs('artifacts', exist_ok=True)
@@ -207,7 +211,7 @@ def precompute(candidates_path=None):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='Pre-compute feature matrix from candidate data.',
-        epilog='Example: python precompute.py --candidates ./candidates.jsonl'
+        epilog='Example: python precompute.py --candidates dataset/candidates.jsonl'
     )
     parser.add_argument('--candidates', default=None,
                         help='Path to candidates.jsonl, .jsonl.gz, or .json file')

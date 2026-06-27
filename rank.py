@@ -5,7 +5,7 @@ Produces submission.csv containing the Top 100 candidate ranking.
 Uses pre-computed feature matrix (from precompute.py) for sub-5-minute execution.
 
 Usage:
-    python rank.py --candidates ./candidates.jsonl --out ./submission.csv
+    python rank.py --candidates dataset/candidates.jsonl --out submission.csv
 
 Compute constraints: ≤5 min wall-clock, ≤16 GB RAM, CPU only, no network calls.
 """
@@ -133,8 +133,8 @@ def run_ranker(candidates_path=None, output_path='submission.csv'):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description='Rank candidates and produce submission CSV.',
-        epilog='Example: python rank.py --candidates ./candidates.jsonl --out ./submission.csv'
+        description='Rank candidates based on precomputed features.',
+        epilog='Example: python rank.py --candidates dataset/candidates.jsonl --out submission.csv'
     )
     parser.add_argument('--candidates', default=None,
                         help='Path to candidates.jsonl, .jsonl.gz, or .json file')

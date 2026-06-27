@@ -10,6 +10,7 @@ __pycache__/
 # Ignore heavy precomputed artifacts (keep jd_features.json)
 artifacts/*.npz
 artifacts/*.npy
+artifacts/candidate_index.json
 
 # Ignore environments
 .env

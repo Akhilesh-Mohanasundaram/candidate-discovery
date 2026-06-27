@@ -132,14 +132,13 @@ Generates candidate-specific, non-templated reasoning that:
 ## 📂 Repository Structure
 
 ```
-legend-acers/
-├── README.md                          # This file
-├── requirements.txt                   # Pinned Python dependencies
-├── submission_metadata.yaml           # Portal metadata (team info, AI declaration)
+candidate-discovery/
 ├── precompute.py                      # Offline: scans 100K → feature_matrix.npz
-├── rank.py                            # Online: reads matrix → submission.csv (≤5 min)
+├── rank.py                            # Online: reads matrix → submission.csv
 ├── validate_submission.py             # CSV format validator
-├── submission.csv                     # Final ranked output (100 rows)
+├── submission_metadata.yaml           # Portal metadata
+├── requirements.txt
+├── README.md                          # This file
 │
 ├── dataset/                           # Hackathon provided data
 │   ├── candidates.jsonl               # 100K profiles
@@ -147,24 +146,27 @@ legend-acers/
 │
 ├── docs/                              # Hackathon guidelines & docs
 │   ├── job_description.txt
-│   ├── submission_spec.txt
-│   └── ...
+│   └── submission_spec.txt
 │
 ├── src/                               # Core pipeline logic
-│   ├── jd_parser.py                   # Stage 1: JD decomposition
-│   ├── honeypot.py                    # Stage 2a: 7-rule fraud detection
-│   ├── veto_checker.py                # Stage 2b: 6 JD disqualifier checks
-│   ├── feature_engineer.py            # Stage 3: Career & logistics features
-│   ├── scorer.py                      # Stage 4: Semantic matching + score fusion
-│   ├── behavioral.py                  # Stage 5: 23-signal multiplier
-│   └── reasoning_gen.py               # Stage 6: Candidate-specific justifications
-│
-├── tests/                             # Fully automated pytest suite simulating synthetic profiles and edge cases
-│   └── test_pipeline.py               # Unit tests covering honeypot, veto, behavioral, and scoring
+│   ├── constants.py                   # NEW: shared enums/VETO types
+│   ├── jd_parser.py
+│   ├── honeypot.py
+│   ├── veto_checker.py
+│   ├── feature_engineer.py
+│   ├── scorer.py
+│   ├── behavioral.py
+│   └── reasoning_gen.py
 │
 ├── artifacts/                         # Pre-computed state
-│   ├── jd_features.json               # Pre-parsed JD requirements
-│   └── feature_matrix.npz             # Offline computation results
+│   ├── jd_features.json
+│   ├── feature_matrix.npz
+│   └── candidate_index.json           # NEW: fast lookup
+│
+├── tests/                             # NEW: Fully automated pytest suite
+│   ├── test_honeypot.py
+│   ├── test_veto.py
+│   └── test_scorer.py
 │
 ├── eval/
 │   └── evaluate.py                    # Submission distribution analyzer
@@ -185,7 +187,7 @@ pip install -r requirements.txt
 ### 2. Pre-compute Feature Matrix (offline, can exceed 5 min)
 
 ```bash
-python precompute.py --candidates ./candidates.jsonl
+python precompute.py --candidates dataset/candidates.jsonl
 ```
 
 This generates `artifacts/feature_matrix.npz` containing pre-scored features for all candidates.
@@ -193,7 +195,7 @@ This generates `artifacts/feature_matrix.npz` containing pre-scored features for
 ### 3. Run the Ranker (must complete within 5 minutes)
 
 ```bash
-python rank.py --candidates ./candidates.jsonl --out ./submission.csv
+python rank.py --candidates dataset/candidates.jsonl --out submission.csv
 ```
 
 *Note: `rank.py` relies entirely on a lightweight candidate index generated during precompute, avoiding massive redundant sequential file scans during the online phase.*
@@ -201,7 +203,7 @@ python rank.py --candidates ./candidates.jsonl --out ./submission.csv
 ### 4. Validate the Submission
 
 ```bash
-python validate_submission.py --csv submission.csv --candidates ./candidates.jsonl
+python validate_submission.py --csv submission.csv --candidates dataset/candidates.jsonl
 ```
 
 ### 5. Launch the Demo Sandbox (locally)
@@ -213,6 +215,12 @@ cd sandbox && streamlit run app.py
 Upload a JSON file with ≤100 candidates to see the ranker in action with a bias comparison panel.
 
 **Live Demo:** [HuggingFace Spaces](https://huggingface.co/spaces/<USERNAME>/legend-acers-ranker)
+
+### 6. Run the Test Suite
+
+```bash
+pytest tests/
+```
 
 ## 📊 Evaluation & Metrics
 
@@ -245,7 +253,7 @@ The ranking step uses vectorized numpy operations on the pre-computed feature ma
 
 ## 🛡️ AI Tools Declaration
 
-We used **Claude** (Anthropic) as a development assistant for code iteration, architecture discussions, and documentation. All engineering decisions, weight tuning, ground truth labeling, and system design were performed by team members with full understanding of the codebase.
+We used **Claude** (Anthropic) and **Gemini** (Google) as a development assistant for code iteration, architecture discussions, and documentation. All engineering decisions, weight tuning, ground truth labeling, and system design were performed by team members with full understanding of the codebase.
 
 ## 👥 Team
 

@@ -105,12 +105,22 @@ def validate(csv_path, candidates_path=None):
                 f = open(candidates_path, 'r', encoding='utf-8')
 
             if f:
+                count = 0
                 for line in f:
                     line = line.strip()
                     if line:
-                        obj = json.loads(line)
-                        valid_ids.add(obj.get('candidate_id'))
+                        try:
+                            obj = json.loads(line)
+                            valid_ids.add(obj.get('candidate_id'))
+                        except Exception:
+                            pass
+                        count += 1
+                        if count % 1000 == 0:
+                            sys.stdout.write(f"\r  Scanned {count} candidates for validation...")
+                            sys.stdout.flush()
                 f.close()
+                if count >= 1000:
+                    print()  # newline after loop
 
             invalid = [cid for cid in cids if cid not in valid_ids]
             if invalid:
